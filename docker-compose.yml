@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  app:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    command: dockerize -wait tcp://fccatalogo-mysql:3306 -timeout 40s sh run.sh
+    ports:
+      - 8080:8080
+    networks:
+      - backend_mysql
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://fccatalogo-mysql:3306/fccatalogo?createDatabaseIfNotExist=true&useSSL=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+  mysql:
+    container_name: fccatalogo-mysql
+    image: mysql:8.0.28
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+      - ../mysql/dbdata:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks:
+      - backend_mysql
+
+networks:
+  backend_mysql:
+    driver: bridge
+    
+  

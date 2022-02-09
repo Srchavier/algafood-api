@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS categories (
+    id int NOT NULL AUTO_INCREMENT,
+    idUUID BINARY(16) default (UUID_TO_BIN(UUID())),
+    `name` varchar(20) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
